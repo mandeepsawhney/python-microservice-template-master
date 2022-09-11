@@ -1,0 +1,59 @@
+version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@0.1.13
+jobs:
+  validate:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - restore_cache:
+          key: pipenv-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Install Dependencies
+          command: pipenv install -d
+      - save_cache:
+          key: pipenv-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ~/.local/share/virtualenvs
+      - run:
+          name: Run Linter
+          command: pipenv run invoke lint
+      - run:
+          name: Run Tests
+          command: pipenv run invoke test
+      - store_artifacts:
+          path: lint-results
+      - store_artifacts:
+          path: test-results
+      - store_test_results:
+          path: test-results
+  publish:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure
+      - run:
+          name: Set Container ID
+          command: echo 'export CONTAINER_ID="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH-$(echo $CIRCLE_SHA1 | cut -c -7)"' >> $BASH_ENV
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: eval $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - run:
+          name: Docker Build
+          command: docker build -t $CONTAINER_ID .
+      - run:
+          name: Docker Push
+          command: docker push $CONTAINER_ID
+workflows:
+  version: 2
+  default:
+    jobs:
+      - validate
+      - publish:
+          requires:
+            - validate
+          context: interologic

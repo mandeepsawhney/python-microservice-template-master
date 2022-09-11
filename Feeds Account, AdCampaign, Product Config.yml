@@ -1,0 +1,48 @@
+# --Dev Config
+CITYGRID 
+{
+    "performance_product_id": 67,
+    "non_performance_product_id": 1,
+    "billing_policy_id": 2,
+},
+REACH_LOCAL 
+{
+    "account_id": 2406,
+    "billing_policy_id": 2,
+    "product_id": 460
+},
+YEXT
+{
+    "account_id": 2407,
+    "ad_campaign_id": 27262
+},
+YP 
+{
+    "account_id": 2417,
+    "ad_campaign_id": 27703
+}
+
+# --Prod Config
+CITYGRID
+{
+    "performance_product_id": 2,
+    "non_performance_product_id": 3,
+    "billing_policy_id": 1,
+},
+REACH_LOCAL
+{
+    "account_id": 106,
+    "billing_policy_id": 1,
+    "product_id": 7
+},
+YEXT
+{
+    "account_id": 40,
+    "ad_campaign_id": 213
+},
+YP
+{
+    "account_id": 73,
+    "ad_campaign_id": 331
+}
+

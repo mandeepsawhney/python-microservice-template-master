@@ -1,0 +1,24 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "*"
+flake8-html = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-html = "*"
+
+[packages]
+flask = "*"
+flask-restplus = "*"
+python-dotenv = "*"
+invoke = "*"
+flask-cors = "*"
+marshmallow = "*"
+flask-marshmallow = "*"
+gunicorn = "*"
+
+[requires]
+python_version = "3.7"
